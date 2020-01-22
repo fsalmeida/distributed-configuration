@@ -27,12 +27,14 @@ namespace ApiAppConfigurationPoc
                 {
                     options.TrimKeyPrefix("TestApp:");
                     options.Connect(settings["ConnectionStrings:AppConfig"])
-                        .Select("TestApp:*")
-                        .ConfigureRefresh(refresh =>
-                        {
-                            refresh.Register("TestApp:Sentinel", true);
-                            refresh.Register("MasterSentinel", true);
-                        });
+                    .Select("TestApp:*")
+                    .Select("TestApp:ComLabel", "label01")
+                    .ConfigureRefresh(refresh =>
+                    {
+                        refresh.SetCacheExpiration(TimeSpan.FromSeconds(5));
+                        refresh.Register("TestApp:Sentinel", true);
+                        refresh.Register("MasterSentinel", true);
+                    });
                 });
             })
             .ConfigureWebHostDefaults(webBuilder =>
